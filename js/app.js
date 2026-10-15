@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     lastConvertedFraction: new Fraction(3n, 4n),
     lastConvertedDecimal: '0.75',
     isSoundMuted: false,
-    theme: localStorage.getItem('boxmatrix_theme') || 'light'
+    theme: localStorage.getItem('matrix_sport_theme_v2') || 'light'
   };
 
   /* ============================================================
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggle.addEventListener('click', () => {
       state.theme = state.theme === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', state.theme);
-      localStorage.setItem('boxmatrix_theme', state.theme);
+      localStorage.setItem('matrix_sport_theme_v2', state.theme);
       if (window.sportsAudio) window.sportsAudio.playTick();
       showToast(state.theme === 'dark' ? "Modo Oscuro activado" : "Modo Claro activado", "info");
     });
