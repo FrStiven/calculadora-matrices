@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Matrix Sport - Calculadora de Matrices avanzada con soporte de potencias, raíces, fracciones exactas y conversión decimal.">
+  <title>Matrix Sport &bull; Calculadora de Matrices</title>
+  
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  
+  <!-- Tipografía Moderna de Alta Legibilidad: Plus Jakarta Sans, Outfit y JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Canvas para Lluvia de Confeti de Victoria -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="site-wrapper">
+    
+    <!-- ============================================================
+         BARRA SUPERIOR LIMPIA Y MODERNA (HEADER)
+         ============================================================ -->
+    <header class="app-header">
+      <div class="header-inner">
+        
+        <!-- Marca y Título -->
+        <div class="brand-group">
+          <div class="brand-icon-box" id="btn-brand-sound" title="Sonar el Gong / Campana" role="button" tabindex="0">
+            <span class="brand-icon">🥋</span>
+          </div>
+          <div class="brand-text">
+            <div class="brand-title-row">
+              <h1 class="brand-title">Matrix Sport</h1>
+              <span class="badge-pro">Álgebra Exacta</span>
+            </div>
+            <p class="brand-subtitle">Calculadora de Matrices &bull; Fracciones, Decimales y Potencias</p>
+          </div>
+        </div>
+
+        <!-- Controles de la cabecera: Modo Claro/Oscuro, Audio y Conversor -->
+        <div class="header-controls">
+          <!-- Acceso directo al conversor decimal <-> fraccion -->
+          <a href="#tactical-converter-section" id="btn-nav-converter" class="btn-header-action" title="Ir al Conversor: Decimal ⇄ Fracción">
+            <span class="header-btn-icon">½ ⇄ 0.0</span>
+            <span class="header-btn-label">Conversor</span>
+          </a>
+
+          <!-- Sonidos -->
+          <button type="button" id="btn-toggle-sound" class="btn-header-action" title="Activar / Silenciar Sonido">
+            <span id="sound-icon" class="header-btn-icon">🔊</span>
+            <span class="header-btn-label">Sonido</span>
+          </button>
+
+          <!-- Alternador de Tema Claro / Oscuro -->
+          <button type="button" id="theme-mode-toggle" class="btn-header-action btn-theme-toggle" title="Cambiar a Modo Claro / Oscuro">
+            <span class="mode-icon-light">☀️</span>
+            <span class="mode-icon-dark">🌙</span>
+            <span class="header-btn-label">Tema</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <main class="main-content">
+
+      <!-- ============================================================
+           SECCIÓN 1: TAMAÑO DE LAS MATRICES (Idéntico a las fotos)
+           ============================================================ -->
+      <section class="step-card" id="step-dimensions">
+        <div class="step-card-header">
+          <div class="step-number-badge">1</div>
+          <div class="step-titles">
+            <h2 class="step-heading">Tamaño de las matrices</h2>
+            <p class="step-subheading">
+              Selecciona las filas y columnas que tendrán las matrices A y B. Puedes trabajar con matrices cuadradas o rectangulares.
+            </p>
+          </div>
+        </div>
+
+        <div class="dimensions-builder-row">
+          
+          <!-- Control de Filas y Columnas de Matriz A -->
+          <div class="dim-selector-group">
+            <span class="dim-group-title">Matriz [A]:</span>
+            <div class="dim-inputs-pair">
+              <div class="dim-field">
+                <label for="rows-a" class="dim-field-label">Filas</label>
+                <div class="stepper-box">
+                  <button type="button" class="btn-step" data-target="rows-a" data-delta="-1" aria-label="Disminuir filas A">−</button>
+                  <input type="number" id="rows-a" class="input-step" min="1" max="30" value="4" aria-label="Filas Matriz A">
+                  <button type="button" class="btn-step" data-target="rows-a" data-delta="1" aria-label="Aumentar filas A">+</button>
+                </div>
+              </div>
+
+              <span class="dim-times">×</span>
+
+              <div class="dim-field">
+                <label for="cols-a" class="dim-field-label">Columnas</label>
+                <div class="stepper-box">
+                  <button type="button" class="btn-step" data-target="cols-a" data-delta="-1" aria-label="Disminuir columnas A">−</button>
+                  <input type="number" id="cols-a" class="input-step" min="1" max="30" value="4" aria-label="Columnas Matriz A">
+                  <button type="button" class="btn-step" data-target="cols-a" data-delta="1" aria-label="Aumentar columnas A">+</button>
+                </div>
+              </div>
+            </div>
+            <span class="dim-indicator-badge" id="lbl-dim-a">4 × 4</span>
+          </div>
+
+          <!-- Control de Filas y Columnas de Matriz B -->
+          <div class="dim-selector-group">
+            <span class="dim-group-title">Matriz [B]:</span>
+            <div class="dim-inputs-pair">
+              <div class="dim-field">
+                <label for="rows-b" class="dim-field-label">Filas</label>
+                <div class="stepper-box">
+                  <button type="button" class="btn-step" data-target="rows-b" data-delta="-1" aria-label="Disminuir filas B">−</button>
+                  <input type="number" id="rows-b" class="input-step" min="1" max="30" value="4" aria-label="Filas Matriz B">
+                  <button type="button" class="btn-step" data-target="rows-b" data-delta="1" aria-label="Aumentar filas B">+</button>
+                </div>
+              </div>
+
+              <span class="dim-times">×</span>
+
+              <div class="dim-field">
+                <label for="cols-b" class="dim-field-label">Columnas</label>
+                <div class="stepper-box">
+                  <button type="button" class="btn-step" data-target="cols-b" data-delta="-1" aria-label="Disminuir columnas B">−</button>
+                  <input type="number" id="cols-b" class="input-step" min="1" max="30" value="4" aria-label="Columnas Matriz B">
+                  <button type="button" class="btn-step" data-target="cols-b" data-delta="1" aria-label="Aumentar columnas B">+</button>
+                </div>
+              </div>
+            </div>
+            <span class="dim-indicator-badge" id="lbl-dim-b">4 × 4</span>
+          </div>
+
+          <!-- Botón Principal "Crear matrices" como en la foto -->
+          <div class="dim-create-action">
+            <button type="button" class="btn-primary-create" id="btn-create-matrices">
+              <span class="btn-icon">⚡</span>
+              <span>Crear matrices</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Presets rápidos de tamaño -->
+        <div class="presets-section">
+          <span class="presets-label">Tamaños rápidos:</span>
+          <div class="presets-list">
+            <button type="button" class="btn-chip" data-target="both" data-r="2" data-c="2">2×2</button>
+            <button type="button" class="btn-chip" data-target="both" data-r="3" data-c="3">3×3</button>
+            <button type="button" class="btn-chip active" data-target="both" data-r="4" data-c="4">4×4</button>
+            <button type="button" class="btn-chip" data-target="both" data-r="5" data-c="5">5×5</button>
+            <button type="button" class="btn-chip" data-target="both" data-r="3" data-c="2">3×2</button>
+            <button type="button" class="btn-chip" data-target="both" data-r="2" data-c="3">2×3</button>
+            <button type="button" class="btn-chip" data-target="both" data-r="10" data-c="10">10×10</button>
+            <button type="button" class="btn-chip btn-chip-max" data-target="both" data-r="30" data-c="30" title="Matriz máxima 30x30 ultra optimizada">30×30 Max</button>
+            <button type="button" class="btn-chip btn-chip-photo" id="btn-photo-preset-a" data-target="a" title="Cargar los ejercicios y potencias de la foto (4×4)">📸 Ejercicio Foto A</button>
+            <button type="button" class="btn-chip btn-chip-photo" id="btn-photo-preset-b" data-target="b" title="Cargar los ejercicios y potencias de la foto (4×4)">📸 Ejercicio Foto B</button>
+            <button type="button" class="btn-chip btn-chip-custom" id="btn-custom-a" data-target="a" title="Tamaño libre personalizado">+ Tamaño Libre</button>
+          </div>
+        </div>
+
+        <p class="dimensions-help-text">
+          💡 Los valores pueden escribirse como números enteros, decimales o fracciones, por ejemplo: <strong>5</strong>, <strong>-3</strong>, <strong>2.5</strong>, <strong>3/4</strong> o potencias como <strong>(81)^1/2</strong> y <strong>2^1/3</strong>.
+        </p>
+      </section>
+
+      <!-- ============================================================
+           SECCIÓN 2: MATRICES DE ENTRADA (A y B)
+           ============================================================ -->
+      <section class="step-card" id="step-matrices-input">
+        <div class="step-card-header">
+          <div class="step-number-badge">2</div>
+          <div class="step-titles">
+            <h2 class="step-heading">Matrices de entrada</h2>
+            <p class="step-subheading">Ingresa los valores de las matrices A y B</p>
+          </div>
+        </div>
+
+        <div class="matrices-dual-grid">
+          
+          <!-- ===== MATRIZ A ===== -->
+          <article class="matrix-card card-mat-a" id="panel-matrix-a">
+            <div class="matrix-card-top">
+              <div class="matrix-card-title-group">
+                <span class="corner-dot dot-red"></span>
+                <h3 class="matrix-card-title">Matriz A</h3>
+              </div>
+
+              <!-- Herramientas de edición rápida -->
+              <div class="matrix-quick-actions">
+                <button type="button" class="btn-action-pill" id="btn-convert-cells-a" title="Alternar todas las celdas entre Fracción y Decimal">½ ⇄ 0.0</button>
+                <button type="button" class="btn-action-pill" id="btn-fractions-demo-a" title="Llenar con fracciones">½ Frac</button>
+                <button type="button" class="btn-action-pill" id="btn-random-a" title="Llenar con números aleatorios">🎲 Azar</button>
+                <button type="button" class="btn-action-pill" id="btn-identity-a" title="Matriz identidad">Identidad</button>
+                <button type="button" class="btn-action-pill" id="btn-zeros-a" title="Llenar con ceros">Ceros</button>
+                <button type="button" class="btn-action-pill" id="btn-ones-a" title="Llenar con unos">Unos</button>
+                <button type="button" class="btn-action-pill btn-pill-danger" id="btn-clear-a" title="Limpiar celdas">Limpiar</button>
+              </div>
+            </div>
+
+            <!-- Densidad visual y HUD de celda activa -->
+            <div class="matrix-density-toolbar" id="density-toolbar-a">
+              <div class="density-selector-group">
+                <span class="density-label">Vista:</span>
+                <button type="button" class="btn-density active" data-target="a" data-density="auto">Auto</button>
+                <button type="button" class="btn-density" data-target="a" data-density="normal">Normal</button>
+                <button type="button" class="btn-density" data-target="a" data-density="compact">Compacto</button>
+                <button type="button" class="btn-density" data-target="a" data-density="mini">Mini</button>
+                <button type="button" class="btn-density" data-target="a" data-density="micro">Micro (30×30)</button>
+              </div>
+              <div class="matrix-coords-hud">
+                <span class="hud-label">Celda activa:</span>
+                <span class="hud-coords" id="coords-text-a">[1, 1]</span>
+              </div>
+            </div>
+
+            <!-- Grilla dinámica de celdas con corchetes modernos -->
+            <div class="matrix-canvas-box" id="canvas-box-a">
+              <div id="grid-matrix-a" class="matrix-input-grid">
+                <!-- Celdas inyectadas dinámicamente -->
+              </div>
+            </div>
+
+            <!-- Asistente de Potencias y Fracciones (Foto 1) -->
+            <div class="matrix-math-hints-box" id="hints-box-a">
+              <div class="hints-header-line">
+                <span class="hints-icon">✨</span>
+                <span class="hints-title">Usa fracciones y potencias directamente en las casillas:</span>
+              </div>
+              <div class="hints-chips-row">
+                <button type="button" class="btn-math-chip" data-target="a" data-expr="(-2)^3" title="Insertar (-2)^3 en celda seleccionada">
+                  <code>(-2)^3</code> <span class="chip-desc">Base negativa</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="a" data-expr="(3/4)^2" title="Insertar (3/4)^2 en celda seleccionada">
+                  <code>(3/4)^2</code> <span class="chip-desc">Fracción elevada</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="a" data-expr="(81)^1/2" title="Insertar (81)^1/2 (= 9)">
+                  <code>(81)^1/2</code> <span class="chip-desc">Raíz exacta (=9)</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="a" data-expr="(2)^1/2" title="Insertar (2)^1/2 (irracional)">
+                  <code>(2)^1/2</code> <span class="chip-desc">Raíz irracional</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="a" data-expr="2^1/3" title="Insertar 2^1/3">
+                  <code>2^1/3</code> <span class="chip-desc">Radical</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="a" data-expr="68/8" title="Insertar 68/8">
+                  <code>68/8</code> <span class="chip-desc">Fracción</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="a" data-expr="2.04" title="Insertar 2.04">
+                  <code>2.04</code> <span class="chip-desc">Decimal</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="a" data-expr="(-6)^2" title="Insertar (-6)^2 (= 36)">
+                  <code>(-6)^2</code> <span class="chip-desc">Potencia par</span>
+                </button>
+              </div>
+              <p class="hints-subtext">
+                Usa paréntesis para potencias y raíces, por ejemplo <strong>(3/4)^2</strong>. También puedes ingresar enteros (<strong>86</strong>, <strong>222</strong>), decimales (<strong>2.04</strong>) y fracciones.
+              </p>
+            </div>
+          </article>
+
+          <!-- ===== MATRIZ B ===== -->
+          <article class="matrix-card card-mat-b" id="panel-matrix-b">
+            <div class="matrix-card-top">
+              <div class="matrix-card-title-group">
+                <span class="corner-dot dot-blue"></span>
+                <h3 class="matrix-card-title">Matriz B</h3>
+              </div>
+
+              <!-- Herramientas de edición rápida -->
+              <div class="matrix-quick-actions">
+                <button type="button" class="btn-action-pill" id="btn-convert-cells-b" title="Alternar todas las celdas entre Fracción y Decimal">½ ⇄ 0.0</button>
+                <button type="button" class="btn-action-pill" id="btn-fractions-demo-b" title="Llenar con fracciones">½ Frac</button>
+                <button type="button" class="btn-action-pill" id="btn-random-b" title="Llenar con números aleatorios">🎲 Azar</button>
+                <button type="button" class="btn-action-pill" id="btn-identity-b" title="Matriz identidad">Identidad</button>
+                <button type="button" class="btn-action-pill" id="btn-zeros-b" title="Llenar con ceros">Ceros</button>
+                <button type="button" class="btn-action-pill" id="btn-ones-b" title="Llenar con unos">Unos</button>
+                <button type="button" class="btn-action-pill btn-pill-danger" id="btn-clear-b" title="Limpiar celdas">Limpiar</button>
+              </div>
+            </div>
+
+            <!-- Densidad visual y HUD de celda activa -->
+            <div class="matrix-density-toolbar" id="density-toolbar-b">
+              <div class="density-selector-group">
+                <span class="density-label">Vista:</span>
+                <button type="button" class="btn-density active" data-target="b" data-density="auto">Auto</button>
+                <button type="button" class="btn-density" data-target="b" data-density="normal">Normal</button>
+                <button type="button" class="btn-density" data-target="b" data-density="compact">Compacto</button>
+                <button type="button" class="btn-density" data-target="b" data-density="mini">Mini</button>
+                <button type="button" class="btn-density" data-target="b" data-density="micro">Micro (30×30)</button>
+              </div>
+              <div class="matrix-coords-hud">
+                <span class="hud-label">Celda activa:</span>
+                <span class="hud-coords" id="coords-text-b">[1, 1]</span>
+              </div>
+            </div>
+
+            <!-- Grilla dinámica de celdas con corchetes modernos -->
+            <div class="matrix-canvas-box" id="canvas-box-b">
+              <div id="grid-matrix-b" class="matrix-input-grid">
+                <!-- Celdas inyectadas dinámicamente -->
+              </div>
+            </div>
+
+            <!-- Asistente de Potencias y Fracciones (Foto 1) -->
+            <div class="matrix-math-hints-box" id="hints-box-b">
+              <div class="hints-header-line">
+                <span class="hints-icon">✨</span>
+                <span class="hints-title">Usa fracciones y potencias directamente en las casillas:</span>
+              </div>
+              <div class="hints-chips-row">
+                <button type="button" class="btn-math-chip" data-target="b" data-expr="(-2)^3" title="Insertar (-2)^3 en celda seleccionada">
+                  <code>(-2)^3</code> <span class="chip-desc">Base negativa</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="b" data-expr="(3/4)^2" title="Insertar (3/4)^2 en celda seleccionada">
+                  <code>(3/4)^2</code> <span class="chip-desc">Fracción elevada</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="b" data-expr="(81)^1/2" title="Insertar (81)^1/2 (= 9)">
+                  <code>(81)^1/2</code> <span class="chip-desc">Raíz exacta (=9)</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="b" data-expr="(2)^1/2" title="Insertar (2)^1/2 (irracional)">
+                  <code>(2)^1/2</code> <span class="chip-desc">Raíz irracional</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="b" data-expr="2^1/3" title="Insertar 2^1/3">
+                  <code>2^1/3</code> <span class="chip-desc">Radical</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="b" data-expr="68/8" title="Insertar 68/8">
+                  <code>68/8</code> <span class="chip-desc">Fracción</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="b" data-expr="2.04" title="Insertar 2.04">
+                  <code>2.04</code> <span class="chip-desc">Decimal</span>
+                </button>
+                <button type="button" class="btn-math-chip" data-target="b" data-expr="(-6)^2" title="Insertar (-6)^2 (= 36)">
+                  <code>(-6)^2</code> <span class="chip-desc">Potencia par</span>
+                </button>
+              </div>
+              <p class="hints-subtext">
+                Usa paréntesis para potencias y raíces, por ejemplo <strong>(3/4)^2</strong>. También puedes ingresar enteros (<strong>86</strong>, <strong>222</strong>), decimales (<strong>2.04</strong>) y fracciones.
+              </p>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SECCIÓN 3: OPERACIONES (Botones limpios y grandes como en la foto)
+           ============================================================ -->
+      <section class="step-card" id="step-operations">
+        <div class="step-card-header">
+          <div class="step-number-badge">3</div>
+          <div class="step-titles">
+            <h2 class="step-heading">Operaciones</h2>
+            <p class="step-subheading">Selecciona la operación que deseas realizar:</p>
+          </div>
+          <div class="compatibility-status-pill" id="badge-compat">
+            <span class="status-indicator-dot"></span>
+            <span id="badge-compat-text">Compatibilidad lista</span>
+          </div>
+        </div>
+
+        <div class="operations-buttons-grid">
+          
+          <!-- Transpuestas (Azul) -->
+          <button type="button" class="btn-operation btn-op-blue" id="btn-transpose-a">
+            <span class="op-btn-icon">↺</span>
+            <span class="op-btn-text">Transpuesta A</span>
+          </button>
+          
+          <button type="button" class="btn-operation btn-op-blue" id="btn-transpose-b">
+            <span class="op-btn-icon">↻</span>
+            <span class="op-btn-text">Transpuesta B</span>
+          </button>
+
+          <!-- Diagonales (Naranja / Ámbar) -->
+          <button type="button" class="btn-operation btn-op-orange" id="btn-diag-main-a">
+            <span class="op-btn-icon">↘</span>
+            <span class="op-btn-text">Diagonal principal</span>
+          </button>
+
+          <button type="button" class="btn-operation btn-op-orange" id="btn-diag-sec-a">
+            <span class="op-btn-icon">↗</span>
+            <span class="op-btn-text">Diagonal secundaria</span>
+          </button>
+
+          <!-- Suma y Producto (Verde) -->
+          <button type="button" class="btn-operation btn-op-green" id="btn-op-add">
+            <span class="op-btn-icon">+</span>
+            <span class="op-btn-text">Suma A + B</span>
+          </button>
+
+          <button type="button" class="btn-operation btn-op-green" id="btn-op-mul">
+            <span class="op-btn-icon">×</span>
+            <span class="op-btn-text">Producto A × B</span>
+          </button>
+
+          <!-- Resta y Producto BxA complementarios -->
+          <button type="button" class="btn-operation btn-op-coral" id="btn-op-sub">
+            <span class="op-btn-icon">−</span>
+            <span class="op-btn-text">Resta A − B</span>
+          </button>
+
+          <button type="button" class="btn-operation btn-op-teal" id="btn-op-mul-ba">
+            <span class="op-btn-icon">⇄</span>
+            <span class="op-btn-text">Producto B × A</span>
+          </button>
+
+          <!-- Limpiar resultado (Gris / Pizarra) -->
+          <button type="button" class="btn-operation btn-op-slate" id="btn-clear-result">
+            <span class="op-btn-icon">🧹</span>
+            <span class="op-btn-text">Limpiar resultado</span>
+          </button>
+
+        </div>
+
+        <!-- Opciones secundarias ocultas para compatibilidad total con scripts -->
+        <div style="display: none;">
+          <span id="hint-sum-desc"></span>
+          <span id="hint-mul-desc"></span>
+          <button id="btn-diag-main-b"></button>
+          <button id="btn-diag-sec-b"></button>
+          <button id="btn-custom-b"></button>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SECCIÓN 4: RESULTADO Y DESGLOSE PASO A PASO
+           ============================================================ -->
+      <section class="step-card" id="results-arena">
+        <div class="step-card-header">
+          <div class="step-number-badge">4</div>
+          <div class="step-titles">
+            <h2 class="step-heading" id="result-operation-name">Resultado de la Operación</h2>
+            <p class="step-subheading" id="result-operation-summary">Selecciona una operación arriba para ver el resultado exacto.</p>
+          </div>
+          
+          <div class="result-actions-top">
+            <div class="result-format-switcher" role="group" aria-label="Formato de visualización">
+              <button type="button" class="btn-chip active" id="btn-result-format-frac">½ Fracción</button>
+              <button type="button" class="btn-chip" id="btn-result-format-dec">0.00 Decimal</button>
+            </div>
+            <button type="button" class="btn-chip" id="btn-copy-to-a">Copiar a [A]</button>
+            <button type="button" class="btn-chip" id="btn-copy-to-b">Copiar a [B]</button>
+          </div>
+        </div>
+
+        <div id="result-icon" style="display:none;"></div>
+        <div id="diagonal-stats-container" class="diag-stats-wrap" style="display: none;"></div>
+
+        <!-- Matriz resultante renderizada con corchetes matemáticos amplios -->
+        <div class="matrix-ring-canvas" id="matrix-render-stage">
+          <div class="empty-state-card">
+            <span class="empty-icon">📊</span>
+            <p>La matriz resultante aparecerá aquí en cuanto presiones una operación arriba.</p>
+          </div>
+        </div>
+
+        <!-- Acordeón de Pasos Matemáticos Detallados -->
+        <div class="judges-card-accordion" id="tactical-breakdown">
+          <button type="button" class="judges-trigger" id="breakdown-header" aria-expanded="true">
+            <span class="judges-title-wrap">
+              <span class="judges-icon">📋</span>
+              <span class="judges-title-text">Desglose Matemático Paso a Paso</span>
+            </span>
+            <span class="judges-chevron" id="breakdown-toggle-btn">−</span>
+          </button>
+
+          <!-- Búsqueda y paginación para 30x30 -->
+          <div class="breakdown-filter-row" id="breakdown-filter-bar">
+            <div class="breakdown-search-group">
+              <span class="filter-label">Consultar Celda:</span>
+              <input type="number" id="input-step-filter-r" placeholder="Fila" min="1" class="step-filter-input" aria-label="Fila">
+              <span class="dim-times">×</span>
+              <input type="number" id="input-step-filter-c" placeholder="Col" min="1" class="step-filter-input" aria-label="Columna">
+              <button type="button" class="btn-chip" id="btn-filter-step">Ir a Celda</button>
+              <button type="button" class="btn-chip" id="btn-reset-step-filter">Ver Primeros Pasos</button>
+            </div>
+            <div class="step-count-status" id="step-count-badge"></div>
+          </div>
+
+          <div class="judges-body" id="breakdown-content">
+            <!-- Desglose inyectado dinámicamente -->
+          </div>
+
+          <div class="breakdown-load-more" id="breakdown-load-more-wrap" style="display: none;">
+            <button type="button" class="btn-chip btn-load-more-steps" id="btn-load-more-steps">Cargar siguientes pasos (+20)</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SECCIÓN 5: CONVERSOR DECIMAL ⇄ FRACCIÓN
+           ============================================================ -->
+      <section class="step-card" id="tactical-converter-section">
+        <div class="step-card-header">
+          <div class="step-number-badge">5</div>
+          <div class="step-titles">
+            <h2 class="step-heading">Centro de Conversión: Decimal ⟷ Fracción</h2>
+            <p class="step-subheading">Transforma números con precisión exacta, simplificación por MCD y detección de períodos.</p>
+          </div>
+          
+          <div class="converter-tabs-dock">
+            <button type="button" class="btn-converter-tab active" id="tab-dec-to-frac">Decimal → Fracción</button>
+            <button type="button" class="btn-converter-tab" id="tab-frac-to-dec">Fracción → Decimal</button>
+          </div>
+        </div>
+
+        <!-- PANEL 1: DECIMAL A FRACCIÓN -->
+        <div class="converter-panel active" id="panel-dec-to-frac">
+          <div class="converter-form-row">
+            <div class="converter-input-wrap">
+              <label for="input-dec-val" class="converter-label">Ingresa un número decimal:</label>
+              <div class="input-with-button">
+                <input type="text" id="input-dec-val" class="converter-input" placeholder="Ej: 0.75, -2.5, 0.(3), 0.1(6)" value="0.75">
+                <button type="button" class="btn-conv-action" id="btn-execute-dec-to-frac">Convertir a Fracción</button>
+              </div>
+              <span class="converter-hint">Admite punto (<code>0.75</code>), coma (<code>0,75</code>), y notación periódica (<code>0.(3)</code> o <code>0.333...</code>).</span>
+            </div>
+
+            <!-- Chips de ejemplo -->
+            <div class="converter-quick-chips">
+              <span class="chips-label">Ejemplos rápidos:</span>
+              <div class="chips-list">
+                <button type="button" class="btn-chip btn-quick-dec" data-dec="0.5">0.5</button>
+                <button type="button" class="btn-chip btn-quick-dec" data-dec="0.75">0.75</button>
+                <button type="button" class="btn-chip btn-quick-dec" data-dec="0.25">0.25</button>
+                <button type="button" class="btn-chip btn-quick-dec" data-dec="0.2">0.2</button>
+                <button type="button" class="btn-chip btn-quick-dec" data-dec="0.125">0.125</button>
+                <button type="button" class="btn-chip btn-quick-dec" data-dec="0.(3)">0.(3) [Periódico]</button>
+                <button type="button" class="btn-chip btn-quick-dec" data-dec="0.1(6)">0.1(6) [Mixto]</button>
+                <button type="button" class="btn-chip btn-quick-dec" data-dec="2.5">2.5</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resultado de Decimal a Fracción -->
+          <div class="converter-result-box" id="result-box-dec-to-frac">
+            <div class="conv-result-hero">
+              <div class="conv-main-display">
+                <span class="conv-res-caption">Fracción Irreducible:</span>
+                <div class="conv-main-val" id="conv-output-frac-val">
+                  <!-- Inyectado dinámicamente -->
+                </div>
+              </div>
+
+              <div class="conv-meta-badges">
+                <span class="badge-conv-type" id="badge-dec-type">Decimal Exacto</span>
+                <span class="badge-conv-mixed" id="badge-dec-mixed" style="display: none;">Número Mixto</span>
+              </div>
+            </div>
+
+            <div class="conv-actions-bar">
+              <button type="button" class="btn-chip" id="btn-copy-conv-frac">Copiar Fracción</button>
+              <button type="button" class="btn-chip" id="btn-send-conv-to-a">Cargar en Matriz [A]</button>
+              <button type="button" class="btn-chip" id="btn-send-conv-to-b">Cargar en Matriz [B]</button>
+            </div>
+
+            <!-- Desglose de pasos -->
+            <div class="conv-steps-accordion" id="steps-dec-to-frac">
+              <h4 class="conv-steps-title">Demostración Matemática Paso a Paso:</h4>
+              <div class="conv-steps-list" id="conv-steps-dec-list">
+                <!-- Pasos inyectados -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 2: FRACCIÓN A DECIMAL -->
+        <div class="converter-panel" id="panel-frac-to-dec" style="display: none;">
+          <div class="converter-form-row">
+            <div class="converter-input-wrap">
+              <label for="input-frac-val" class="converter-label">Ingresa una fracción o número mixto:</label>
+              <div class="input-with-button">
+                <input type="text" id="input-frac-val" class="converter-input" placeholder="Ej: 3/4, -7/2, 1/3, 5/8, 2 1/2" value="3/4">
+                <button type="button" class="btn-conv-action" id="btn-execute-frac-to-dec">Convertir a Decimal</button>
+              </div>
+              <span class="converter-hint">Admite fracciones (<code>3/4</code>), números mixtos (<code>2 1/2</code>) y negativos.</span>
+            </div>
+
+            <div class="converter-quick-chips">
+              <span class="chips-label">Fracciones comunes:</span>
+              <div class="chips-list">
+                <button type="button" class="btn-chip btn-quick-frac" data-frac="1/2">1/2</button>
+                <button type="button" class="btn-chip btn-quick-frac" data-frac="1/3">1/3</button>
+                <button type="button" class="btn-chip btn-quick-frac" data-frac="2/3">2/3</button>
+                <button type="button" class="btn-chip btn-quick-frac" data-frac="3/4">3/4</button>
+                <button type="button" class="btn-chip btn-quick-frac" data-frac="1/5">1/5</button>
+                <button type="button" class="btn-chip btn-quick-frac" data-frac="5/8">5/8</button>
+                <button type="button" class="btn-chip btn-quick-frac" data-frac="7/3">7/3</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resultado de Fracción a Decimal -->
+          <div class="converter-result-box" id="result-box-frac-to-dec">
+            <div class="conv-result-hero">
+              <div class="conv-main-display">
+                <span class="conv-res-caption">Expresión Decimal:</span>
+                <div class="conv-main-val" id="conv-output-dec-val">
+                  <!-- Inyectado dinámicamente -->
+                </div>
+              </div>
+
+              <div class="conv-meta-badges">
+                <span class="badge-conv-type" id="badge-frac-type">Decimal Exacto</span>
+                <span class="badge-conv-mixed" id="badge-frac-period" style="display: none;">Período</span>
+              </div>
+            </div>
+
+            <div class="conv-actions-bar">
+              <button type="button" class="btn-chip" id="btn-copy-conv-dec">Copiar Decimal</button>
+              <button type="button" class="btn-chip" id="btn-send-dec-to-a">Cargar en Matriz [A]</button>
+              <button type="button" class="btn-chip" id="btn-send-dec-to-b">Cargar en Matriz [B]</button>
+            </div>
+
+            <div class="conv-steps-accordion" id="steps-frac-to-dec">
+              <h4 class="conv-steps-title">Demostración Matemática Paso a Paso:</h4>
+              <div class="conv-steps-list" id="conv-steps-frac-list">
+                <!-- Pasos inyectados -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Footer limpio -->
+    <footer class="app-footer">
+      <div class="footer-wrap">
+        <span class="footer-brand">Matrix Sport</span>
+        <span class="footer-dot">&bull;</span>
+        <span>Calculadora de Matrices con Precisión Exacta y Notación Matemática Formal</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Contenedor de Notificaciones Toast -->
+  <div class="toast-hub" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/fraction.js"></script>
+  <script src="js/matrix.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

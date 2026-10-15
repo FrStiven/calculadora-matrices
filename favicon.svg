@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="ringBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b2e"/>
+      <stop offset="100%" stop-color="#0a0914"/>
+    </linearGradient>
+    <linearGradient id="redGlove" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff4d4d"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+    <linearGradient id="beltGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Cuadrilátero / Fondo de Arena de Boxeo -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#ringBg)" stroke="#ef4444" stroke-width="2.5"/>
+
+  <!-- Corchetes de Matriz de Boxeo -->
+  <path d="M14 14 H20 V18 H18 V46 H20 V50 H14 Z" fill="#ef4444"/>
+  <path d="M50 14 H44 V18 H46 V46 H44 V50 H50 Z" fill="#3b82f6"/>
+
+  <!-- Guante de Boxeo Principal -->
+  <path d="M26 26 C24 22 28 18 34 18 C39 18 43 21 44 26 C45 30 43 35 41 38 C39 40 37 42 35 44 L30 44 C27 42 25 39 24 35 C23 32 23 29 26 26 Z" fill="url(#redGlove)"/>
+  
+  <!-- Pulgar del Guante -->
+  <path d="M25 28 C22 28 20 31 21 34 C22 36 24 37 26 36 L27 33 Z" fill="#dc2626"/>
+
+  <!-- Muñequera / Cinta del Guante -->
+  <rect x="28" y="43" width="10" height="5" rx="1.5" fill="#f8fafc" stroke="#64748b" stroke-width="1"/>
+  <!-- Cordón del guante -->
+  <line x1="33" y1="43" x2="33" y2="48" stroke="#ef4444" stroke-width="1.5"/>
+
+  <!-- Corona / Estrella de Campeón Mundial -->
+  <polygon points="32,6 33.5,9.5 37,10 34.5,12.5 35,16 32,14 29,16 29.5,12.5 27,10 30.5,9.5" fill="url(#beltGold)"/>
+</svg>
